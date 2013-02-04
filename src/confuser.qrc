@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>images/icons/copy.png</file>
+        <file>images/icons/crop.png</file>
+        <file>images/icons/paste.png</file>
+        <file>images/icons/readme.txt</file>
+        <file>images/icons/save_all.png</file>
+        <file>images/icons/undo.png</file>
+        <file>images/icons/unsaved.png</file>
+        <file>images/icons/close.png</file>
+        <file>images/icons/close_all.png</file>
+        <file>images/icons/cut.png</file>
+        <file>images/icons/expand.png</file>
+        <file>images/icons/export.png</file>
+        <file>images/icons/new.png</file>
+        <file>images/icons/open.png</file>
+        <file>images/icons/redo.png</file>
+        <file>images/icons/save.png</file>
+        <file>images/icons/shrink.png</file>
+        <file>images/icons/delete.png</file>
+        <file>images/icons/save_as.png</file>
+        <file>images/icons/saved.png</file>
+        <file>images/icons/preferences.png</file>
+        <file>images/icons/exit.png</file>
+    </qresource>
+</RCC>
