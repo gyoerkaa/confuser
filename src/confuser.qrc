@@ -3,7 +3,6 @@
         <file>images/icons/copy.png</file>
         <file>images/icons/crop.png</file>
         <file>images/icons/paste.png</file>
-        <file>images/icons/readme.txt</file>
         <file>images/icons/save_all.png</file>
         <file>images/icons/undo.png</file>
         <file>images/icons/unsaved.png</file>
@@ -22,5 +21,7 @@
         <file>images/icons/saved.png</file>
         <file>images/icons/preferences.png</file>
         <file>images/icons/exit.png</file>
+        <file>images/icons/readme.txt</file>
+        <file>images/icons/export_options.png</file>
     </qresource>
 </RCC>

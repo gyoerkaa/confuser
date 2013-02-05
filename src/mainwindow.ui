@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Confuser</string>
   </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
@@ -163,52 +163,52 @@
           </row>
           <column>
            <property name="text">
-            <string>A</string>
+            <string>1</string>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>B</string>
+            <string>2</string>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>C</string>
+            <string>3</string>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>D</string>
+            <string>4</string>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>E</string>
+            <string>5</string>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>F</string>
+            <string>6</string>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>G</string>
+            <string>7</string>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>I</string>
+            <string>8</string>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>K</string>
+            <string>9</string>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>L</string>
+            <string>10</string>
            </property>
           </column>
          </widget>
@@ -239,7 +239,7 @@
      <string>File</string>
     </property>
     <addaction name="actionCmatNew"/>
-    <addaction name="actionOpen"/>
+    <addaction name="actionOpenFile"/>
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
     <addaction name="actionSaveAll"/>
@@ -283,7 +283,8 @@
     <property name="title">
      <string>Settings</string>
     </property>
-    <addaction name="actionPreferences"/>
+    <addaction name="actionEditPreferences"/>
+    <addaction name="actionEditExportOptions"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -306,7 +307,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionCmatNew"/>
-   <addaction name="actionOpen"/>
+   <addaction name="actionOpenFile"/>
    <addaction name="actionSave"/>
    <addaction name="actionSaveAll"/>
    <addaction name="actionCmatClose"/>
@@ -324,7 +325,7 @@
    <addaction name="actionCmatExpand"/>
    <addaction name="actionCmatCrop"/>
   </widget>
-  <action name="actionOpen">
+  <action name="actionOpenFile">
    <property name="icon">
     <iconset>
      <normalon>:/icons/images/icons/open.png</normalon>
@@ -366,7 +367,10 @@
     <string>Close</string>
    </property>
    <property name="toolTip">
-    <string>Close current csv file</string>
+    <string>Close current matrix</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
    </property>
   </action>
   <action name="actionUndo">
@@ -452,7 +456,7 @@
     <string>About</string>
    </property>
   </action>
-  <action name="actionPreferences">
+  <action name="actionEditPreferences">
    <property name="icon">
     <iconset>
      <normalon>:/icons/images/icons/preferences.png</normalon>
@@ -520,6 +524,9 @@
    <property name="text">
     <string>Save All</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
   </action>
   <action name="actionCmatShrink">
    <property name="icon">
@@ -559,6 +566,16 @@
    </property>
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionEditExportOptions">
+   <property name="icon">
+    <iconset>
+     <normalon>:/icons/images/icons/export_options.png</normalon>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Export Options</string>
    </property>
   </action>
  </widget>

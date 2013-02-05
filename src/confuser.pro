@@ -7,11 +7,16 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+           mainwindow.cpp \
+           exportoptionsdialog.cpp \
+           confmatwidget.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+            exportoptionsdialog.h \
+            confmatwidget.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+            exportoptionsdialog.ui
 
 RESOURCES += \
     confuser.qrc

@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+class ConfMatWidget;
+
 namespace Ui
 {
     class MainWindow;
@@ -19,12 +21,18 @@ public:
 private slots:
     void on_actionCmatNew_triggered();
 
-    void on_actionOpen_triggered();
+    void on_actionCmatShrink_triggered();
+
+    void on_actionCmatExpand_triggered();
+
+    void on_actionOpenFile_triggered();
+
+    void on_actionEditExportOptions_triggered();
 
 private:
-    void new_cmat_tab();
-
     Ui::MainWindow *ui;
+
+    ConfMatWidget* getActiveConfMat();
 };
 
 #endif // MAINWINDOW_H
