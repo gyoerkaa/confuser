@@ -1,11 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "exportoptionsdialog.h"
-#include <QFileDialog>
-#include "confmatwidget.h"
+#include "confmattab.h"
 
-#define MAX_CMAT_SIZE 128
-#define MIN_CMAT_SIZE 3
+#include <QFileDialog>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -13,6 +11,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    m_confMatIdx = 0;
+
+    this->addConfMatTab();
 }
 
 
@@ -22,58 +24,71 @@ MainWindow::~MainWindow()
 }
 
 
-ConfMatWidget* MainWindow::getActiveConfMat()
+void MainWindow::removeConfMatTab(ConfMatTab* confMatTab)
 {
-    QWidget* activeTab = ui->cmatTabWidget->currentWidget();
-    return activeTab->findChild<ConfMatWidget*>();
+    if (confMatTab == NULL)
+        return;
+
+    ui->cmatTabWidget->removeTab(ui->cmatTabWidget->indexOf(confMatTab));
+    delete confMatTab;
+
+    // Make sure there is always 1 tab open
+    if (ui->cmatTabWidget->count() <= 0)
+    {
+        this->addConfMatTab();
+    }
+}
+
+
+ConfMatTab* MainWindow::addConfMatTab(int matSize, QString matName)
+{
+    ConfMatTab* newCMat = new ConfMatTab(matSize);
+    ui->cmatTabWidget->addTab(newCMat, matName);
+    return newCMat;
+}
+
+
+ConfMatTab* MainWindow::addConfMatTab()
+{
+    int matSize = 7; // TODO: Move into settings
+
+    // Generate a name
+    QString matName = "new " + QString::number(m_confMatIdx);
+    m_confMatIdx++;
+
+    return this->addConfMatTab(matSize, matName);
+}
+
+
+ConfMatTab* MainWindow::getActiveConfMatTab()
+{
+    return (ConfMatTab*)ui->cmatTabWidget->currentWidget();
 }
 
 
 void MainWindow::on_actionCmatNew_triggered()
-{
-
+{    
+    ui->cmatTabWidget->setCurrentWidget(this->addConfMatTab());
 }
 
 
 void MainWindow::on_actionCmatShrink_triggered()
 {
-    QWidget* activeTab = ui->cmatTabWidget->currentWidget();
-    QTableWidget* activeCmat = activeTab->findChild<QTableWidget*>();
+    ConfMatTab* activeCMatTab = this->getActiveConfMatTab();
 
-    if (activeCmat->rowCount() > MIN_CMAT_SIZE)
-    {
-        activeCmat->setRowCount(activeCmat->rowCount()-1);
-    }
-    else
-    {
-        // TODO: Add an error message
-    }
-
-    if (activeCmat->columnCount() > MIN_CMAT_SIZE)
-    {
-        activeCmat->setColumnCount(activeCmat->columnCount()-1);
-    }
-    else
-    {
-        // TODO: Add an error message
-    }
+    if (activeCMatTab != NULL)
+        activeCMatTab->setMatSize(activeCMatTab->getMatSize()-1);
 }
+
 
 void MainWindow::on_actionCmatExpand_triggered()
 {
-    QWidget* activeTab = ui->cmatTabWidget->currentWidget();
-    QTableWidget* activeCmat = activeTab->findChild<QTableWidget*>();
+    ConfMatTab* activeCMatTab = this->getActiveConfMatTab();
 
-    if (activeCmat->rowCount() < MAX_CMAT_SIZE)
-    {
-        activeCmat->setRowCount(activeCmat->rowCount()+1);
-    }
-    if (activeCmat->columnCount() < MAX_CMAT_SIZE)
-    {
-        activeCmat->setColumnCount(activeCmat->columnCount()+1);
-    }
-
+    if (activeCMatTab != NULL)
+        activeCMatTab->setMatSize(activeCMatTab->getMatSize()+1);
 }
+
 
 void MainWindow::on_actionOpenFile_triggered()
 {
@@ -88,10 +103,26 @@ void MainWindow::on_actionOpenFile_triggered()
     }
 }
 
+
 void MainWindow::on_actionEditExportOptions_triggered()
 {
     ExportOptionsDialog eoDialog;
 
     eoDialog.setModal(true);
     eoDialog.exec();
+}
+
+
+void MainWindow::on_actionCmatClose_triggered()
+{
+    this->removeConfMatTab(this->getActiveConfMatTab());
+}
+
+
+void MainWindow::on_actionCmatCloseAll_triggered()
+{
+    for (int n=ui->cmatTabWidget->count(); n>0; n--)
+    {
+        this->removeConfMatTab(this->getActiveConfMatTab());
+    }
 }

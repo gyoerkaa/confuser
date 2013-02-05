@@ -9,11 +9,11 @@ TEMPLATE = app
 SOURCES += main.cpp\
            mainwindow.cpp \
            exportoptionsdialog.cpp \
-           confmatwidget.cpp
+    confmattab.cpp
 
 HEADERS  += mainwindow.h \
             exportoptionsdialog.h \
-            confmatwidget.h
+    confmattab.h
 
 FORMS    += mainwindow.ui \
             exportoptionsdialog.ui

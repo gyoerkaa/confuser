@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 
-class ConfMatWidget;
+class ConfMatTab;
 
 namespace Ui
 {
@@ -29,10 +29,20 @@ private slots:
 
     void on_actionEditExportOptions_triggered();
 
+    void on_actionCmatClose_triggered();
+
+    void on_actionCmatCloseAll_triggered();
+
 private:
     Ui::MainWindow *ui;
 
-    ConfMatWidget* getActiveConfMat();
+    int m_confMatIdx;
+
+    void MainWindow::removeConfMatTab(ConfMatTab* confMatTab);
+    ConfMatTab* MainWindow::addConfMatTab(int nSize, QString matName);
+    ConfMatTab* MainWindow::addConfMatTab();
+
+    ConfMatTab* getActiveConfMatTab();
 };
 
 #endif // MAINWINDOW_H
