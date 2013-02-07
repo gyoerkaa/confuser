@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>458</width>
+    <height>360</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -30,7 +30,7 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QTabWidget" name="tabWidget">
+    <widget class="QTabWidget" name="eoMainTabWidget">
      <property name="currentIndex">
       <number>0</number>
      </property>

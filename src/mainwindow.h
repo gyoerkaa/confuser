@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 class ConfMatTab;
+class MainSettings;
 
 namespace Ui
 {
@@ -37,6 +38,8 @@ private:
     Ui::MainWindow *ui;
 
     int m_confMatIdx;
+
+    MainSettings* m_mainSettings;
 
     void MainWindow::removeConfMatTab(ConfMatTab* confMatTab);
     ConfMatTab* MainWindow::addConfMatTab(int nSize, QString matName);

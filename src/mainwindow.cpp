@@ -2,9 +2,9 @@
 #include "ui_mainwindow.h"
 #include "exportoptionsdialog.h"
 #include "confmattab.h"
+#include "mainsettings.h"
 
 #include <QFileDialog>
-
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     m_confMatIdx = 0;
+    m_mainSettings = new MainSettings;
 
     this->addConfMatTab();
 }
@@ -21,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete m_mainSettings;
 }
 
 

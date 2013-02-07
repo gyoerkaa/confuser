@@ -60,5 +60,5 @@ void ConfMatTab::setMatSize(int newSize)
 
 int ConfMatTab::getMatSize()
 {
-    return m_confMatSize;
+    return m_confMatSize;   
 }
