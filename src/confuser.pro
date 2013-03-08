@@ -8,19 +8,19 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
            mainwindow.cpp \
-           exportoptionsdialog.cpp \
            confmattab.cpp \
            confmattabcmds.cpp \
-           mainsettings.cpp
+           mainsettings.cpp \
+    preferencesdialog.cpp
 
 HEADERS  += mainwindow.h \
-            exportoptionsdialog.h \
             confmattab.h \
             confmattabcmds.h \
-            mainsettings.h
+            mainsettings.h \
+    preferencesdialog.h
 
 FORMS    += mainwindow.ui \
-            exportoptionsdialog.ui
+    preferencesdialog.ui
 
 RESOURCES += \
     confuser.qrc

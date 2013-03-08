@@ -155,7 +155,6 @@
      <string>Settings</string>
     </property>
     <addaction name="actionEditPreferences"/>
-    <addaction name="actionEditExportOptions"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -437,16 +436,6 @@
    </property>
    <property name="text">
     <string>Exit</string>
-   </property>
-  </action>
-  <action name="actionEditExportOptions">
-   <property name="icon">
-    <iconset>
-     <normalon>:/icons/images/icons/export_options.png</normalon>
-    </iconset>
-   </property>
-   <property name="text">
-    <string>Export Options</string>
    </property>
   </action>
  </widget>
