@@ -114,9 +114,12 @@
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
     <addaction name="actionSaveAll"/>
-    <addaction name="actionCmatExport"/>
     <addaction name="actionCmatClose"/>
     <addaction name="actionCmatCloseAll"/>
+    <addaction name="separator"/>
+    <addaction name="actionViewLatexCode"/>
+    <addaction name="actionCmatExport"/>
+    <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
@@ -182,6 +185,8 @@
    <addaction name="actionSaveAll"/>
    <addaction name="actionCmatClose"/>
    <addaction name="actionCmatCloseAll"/>
+   <addaction name="separator"/>
+   <addaction name="actionViewLatexCode"/>
    <addaction name="actionCmatExport"/>
    <addaction name="separator"/>
    <addaction name="actionCut"/>
@@ -338,9 +343,8 @@
   </action>
   <action name="actionCmatExport">
    <property name="icon">
-    <iconset>
-     <normalon>:/icons/images/icons/export.png</normalon>
-    </iconset>
+    <iconset resource="confuser.qrc">
+     <normaloff>:/icons/images/icons/export.png</normaloff>:/icons/images/icons/export.png</iconset>
    </property>
    <property name="text">
     <string>Export...</string>
@@ -438,8 +442,19 @@
     <string>Exit</string>
    </property>
   </action>
+  <action name="actionViewLatexCode">
+   <property name="icon">
+    <iconset resource="confuser.qrc">
+     <normaloff>:/icons/images/icons/view_code.png</normaloff>:/icons/images/icons/view_code.png</iconset>
+   </property>
+   <property name="text">
+    <string>View Latex Code ...</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="confuser.qrc"/>
+ </resources>
  <connections/>
 </ui>

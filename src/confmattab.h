@@ -1,19 +1,22 @@
 #ifndef CONFMATTAB_H
 #define CONFMATTAB_H
 
-#define MAX_CMAT_COLS 128
-#define MAX_CMAT_ROWS 128
+#define MAX_CMAT_COLS 512
+#define MAX_CMAT_ROWS 512
 #define MIN_CMAT_COLS 2
 #define MIN_CMAT_ROWS 2
+#define CLIPBRD_NEWLINE "\n"
+#define CLIPBRD_NEWCELL "\t"
+#define CLIPBRD_UNSELECTED "[]"
 
 #include <QWidget>
+#include <QModelIndexList>
 
 class QVBoxLayout;
-class QTableWidget;
 class QTableView;
-class QUndoStack;
-class QTableWidgetSelectionRange;
 class QString;
+class ConfMatModel;
+class ConfMat;
 
 namespace Ui
 {
@@ -23,7 +26,7 @@ namespace Ui
 //! @brief Holds confusion matrix and handles sanity checks of the user input
 //!
 //! This class checks all user inputs for sanity, before adding it to the
-//! confusion matrix. It also holds the undo stack for its confusion matrix
+//! confusion matrix.
 //!
 //! @author Attila Györkös
 //!
@@ -36,45 +39,45 @@ public:
     explicit ConfMatTab(int rowCount, int colCount, QWidget* parent = 0);
     ~ConfMatTab();
 
-    QList<QTableWidgetSelectionRange> getSelectedRanges() const;
+    QModelIndexList getSelectedIndices() const;
     QString getCMatItem(int row, int col) const;
-    QList< QList<QString> > getCMatItems() const;
+    ConfMat& getCMat() const;
+
     void deleteCMatItem(int row, int col);
     void setCMatItem(int row, int col, QString itemValue);
     void save();
     bool canSave() const;
 
-    void cutCommand();
-    void copy() const;
+    void cutCMatItems();
+    void copyCMatItems() const;
     bool canCopy() const;
-    void pasteCommand();
+    void pasteCMatItems();
+    bool canPaste() const;
 
-    void deleteCommand();
+    void deleteCMatItems();
     bool canDelete();
 
-    void undoCommand();
+    void undo();
     bool canUndo() const;
-    void redoCommand();
+    void redo();
     bool canRedo() const;
 
-    void resizeCommand(int rowCount, int colCount, bool keepQuadratic = true);
-    void cropCommand(bool keepQuadratic = true);
-    void setMatSize(int rowCount, int colCount);
-    int  getRowCount() const;
-    int  getColCount() const;
+    void setCMatSize(int rowCount,
+                     int colCount,
+                     bool keepSquare = true);
+    void cropCMat(bool keepSquare = true);
+    int  getCmatRowCount() const;
+    int  getCmatColCount() const;
 
     bool canShrink() const;
     bool canExpand() const;
 
 
 private:
-    //! @brief The undo stack for this tab/matrix
-    QUndoStack* m_undoStack;
-
-    QTableWidget* m_tableWidget;
-
     //! @brief Widget used to display the tab/matrix
     QTableView* m_tableView;
+
+    ConfMatModel* m_cmatModel;
 
     //! @brief Wether the matrix contains unsaved changes
     bool m_unsavedChanges;

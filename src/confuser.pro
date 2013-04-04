@@ -9,18 +9,27 @@ TEMPLATE = app
 SOURCES += main.cpp\
            mainwindow.cpp \
            confmattab.cpp \
-           confmattabcmds.cpp \
            mainsettings.cpp \
-    preferencesdialog.cpp
+    preferencesdialog.cpp \
+    confmatmodel.cpp \
+    confmatcmds.cpp \
+    confmat.cpp \
+    latexcode.cpp \
+    texcodedialog.cpp
 
 HEADERS  += mainwindow.h \
             confmattab.h \
-            confmattabcmds.h \
             mainsettings.h \
-    preferencesdialog.h
+    preferencesdialog.h \
+    confmatmodel.h \
+    confmatcmds.h \
+    confmat.h \
+    latexcode.h \
+    texcodedialog.h
 
 FORMS    += mainwindow.ui \
-    preferencesdialog.ui
+    preferencesdialog.ui \
+    texcodedialog.ui
 
 RESOURCES += \
     confuser.qrc

@@ -1,12 +1,14 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "preferencesdialog.h"
+#include "texcodedialog.h"
+#include "latexcode.h"
 #include "confmattab.h"
 #include "mainsettings.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
-
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget* parent) :
     QMainWindow(parent),
@@ -87,6 +89,7 @@ bool MainWindow::unsavedChangesDialog(ConfMatTab* confMatTab)
     msgBox.setDefaultButton(QMessageBox::Yes);
     int ret = msgBox.exec();
     return true;
+    return ret;
 }
 
 
@@ -116,13 +119,16 @@ void MainWindow::refreshButtonStates(ConfMatTab* confMatTab)
 {
     if (confMatTab == 0)
         return;
-
+    qDebug() << "MainWindow::refreshButtonStates";
+    qDebug() << "... canUndo: " << confMatTab->canUndo();
+    qDebug() << "... canRedo: " << confMatTab->canRedo();
     ui->actionSave->setEnabled(confMatTab->canSave());
-    ui->actionCopy->setEnabled(confMatTab->canCopy());
     ui->actionCut->setEnabled(confMatTab->canCopy());
+    ui->actionCopy->setEnabled(confMatTab->canCopy());
+    ui->actionPaste->setEnabled(confMatTab->canPaste());
     ui->actionDelete->setEnabled(confMatTab->canDelete());
     ui->actionUndo->setEnabled(confMatTab->canUndo());
-    ui->actionRedo->setEnabled(confMatTab->canRedo());    
+    ui->actionRedo->setEnabled(confMatTab->canRedo());
     ui->actionCmatShrink->setEnabled(confMatTab->canShrink());
     ui->actionCmatExpand->setEnabled(confMatTab->canExpand());
     ui->actionCmatCrop->setEnabled(confMatTab->canShrink());
@@ -195,29 +201,40 @@ void MainWindow::on_actionCmatExport_triggered()
 
 void MainWindow::on_actionCut_triggered()
 {
-
+    ConfMatTab* activeCMatTab = this->getActiveConfMatTab();
+    if (activeCMatTab != 0)
+    {
+        activeCMatTab->cutCMatItems();
+    }
 }
 
 
 void MainWindow::on_actionCopy_triggered()
 {
-
+    ConfMatTab* activeCMatTab = this->getActiveConfMatTab();
+    if (activeCMatTab != 0)
+    {
+        activeCMatTab->copyCMatItems();
+    }
 }
 
 
 void MainWindow::on_actionPaste_triggered()
 {
-
+    ConfMatTab* activeCMatTab = this->getActiveConfMatTab();
+    if (activeCMatTab != 0)
+    {
+        activeCMatTab->pasteCMatItems();
+    }
 }
 
 
 void MainWindow::on_actionDelete_triggered()
 {
     ConfMatTab* activeCMatTab = this->getActiveConfMatTab();
-
     if (activeCMatTab != 0)
     {
-        activeCMatTab->deleteCommand();
+        activeCMatTab->deleteCMatItems();
         this->refreshButtonStates(activeCMatTab);
     }
 }
@@ -229,7 +246,7 @@ void MainWindow::on_actionUndo_triggered()
 
     if (activeCMatTab != 0)
     {
-        activeCMatTab->undoCommand();
+        activeCMatTab->undo();
         this->refreshButtonStates(activeCMatTab);
     }
 }
@@ -241,7 +258,7 @@ void MainWindow::on_actionRedo_triggered()
 
     if (activeCMatTab != 0)
     {
-        activeCMatTab->redoCommand();
+        activeCMatTab->redo();
         this->refreshButtonStates(activeCMatTab);
     }
 }
@@ -253,9 +270,9 @@ void MainWindow::on_actionCmatShrink_triggered()
 
     if (activeCMatTab != 0)
     {
-        activeCMatTab->resizeCommand(activeCMatTab->getRowCount()-1,
-                                     activeCMatTab->getColCount()-1,
-                                     true);
+        activeCMatTab->setCMatSize(activeCMatTab->getCmatRowCount()-1,
+                                   activeCMatTab->getCmatColCount()-1,
+                                   true);
         this->refreshButtonStates(activeCMatTab);
     }
 }
@@ -267,9 +284,9 @@ void MainWindow::on_actionCmatExpand_triggered()
 
     if (activeCMatTab != 0)
     {
-        activeCMatTab->resizeCommand(activeCMatTab->getRowCount()+1,
-                                     activeCMatTab->getColCount()+1,
-                                     true);
+        activeCMatTab->setCMatSize(activeCMatTab->getCmatRowCount()+1,
+                                   activeCMatTab->getCmatColCount()+1,
+                                   true);
         this->refreshButtonStates(activeCMatTab);
     }
 }
@@ -281,7 +298,7 @@ void MainWindow::on_actionCmatCrop_triggered()
 
     if (activeCMatTab != 0)
     {
-        activeCMatTab->cropCommand();
+        activeCMatTab->cropCMat();
         this->refreshButtonStates(activeCMatTab);
     }
 }
@@ -298,6 +315,7 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::on_cmatTabWidget_currentChanged(int index)
 {
+    Q_UNUSED(index);
     this->refreshButtonStates(this->getActiveConfMatTab());
 }
 
@@ -305,6 +323,19 @@ void MainWindow::on_cmatTabWidget_currentChanged(int index)
 void MainWindow::slot_selectionChanged(const QItemSelection &selected,
                                        const QItemSelection &deselected)
 {
+    Q_UNUSED(selected);
+    Q_UNUSED(deselected);
+    qDebug() << "MainWindow::slot_selectionChanged";
+    this->refreshButtonStates(this->getActiveConfMatTab());
+}
+
+
+void MainWindow::slot_dataChanged(const QModelIndex& topLeft,
+                                  const QModelIndex& bottomRight)
+{
+    Q_UNUSED(topLeft);
+    Q_UNUSED(bottomRight);
+    qDebug() << "MainWindow::slot_dataChanged";
     this->refreshButtonStates(this->getActiveConfMatTab());
 }
 
@@ -315,4 +346,13 @@ void MainWindow::on_actionEditPreferences_triggered()
 
     prefDialog.setModal(true);
     prefDialog.exec();
+}
+
+void MainWindow::on_actionViewLatexCode_triggered()
+{
+    LatexCode texCode(this->getActiveConfMatTab()->getCMat());
+    TexCodeDialog codeDialog(texCode);
+
+    codeDialog.setModal(true);
+    codeDialog.exec();
 }

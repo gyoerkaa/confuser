@@ -10,7 +10,6 @@
         <file>images/icons/close_all.png</file>
         <file>images/icons/cut.png</file>
         <file>images/icons/expand.png</file>
-        <file>images/icons/export.png</file>
         <file>images/icons/new.png</file>
         <file>images/icons/open.png</file>
         <file>images/icons/redo.png</file>
@@ -23,5 +22,7 @@
         <file>images/icons/exit.png</file>
         <file>images/icons/readme.txt</file>
         <file>images/icons/export_options.png</file>
+        <file>images/icons/export.png</file>
+        <file>images/icons/view_code.png</file>
     </qresource>
 </RCC>

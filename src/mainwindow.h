@@ -6,6 +6,7 @@
 class ConfMatTab;
 class MainSettings;
 class QItemSelection;
+class QModelIndex;
 
 namespace Ui
 {
@@ -25,13 +26,14 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget* parent = 0);
     ~MainWindow();
 
 public slots:
-    void slot_selectionChanged(const QItemSelection &selected,
-                               const QItemSelection &deselected);
-
+    void slot_selectionChanged(const QItemSelection& selected,
+                               const QItemSelection& deselected);
+    void slot_dataChanged(const QModelIndex& topLeft,
+                          const QModelIndex& bottomRight);
 private:
     //! @brief Provides access to all GUI elements
     Ui::MainWindow* ui;
@@ -125,6 +127,7 @@ private slots:
     void on_cmatTabWidget_currentChanged(int index);
     void on_actionEditPreferences_triggered();
 
+    void on_actionViewLatexCode_triggered();
 };
 
 #endif // MAINWINDOW_H
