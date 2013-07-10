@@ -10,9 +10,11 @@
 #include <QAbstractItemModel>
 #include <QApplication>
 #include <QDebug>
+#include <QFile>
 
 #include "confmatmodel.h"
 #include "confmat.h"
+#include "texcode.h"
 
 ConfMatTab::ConfMatTab(QWidget* parent)
     : QWidget(parent)
@@ -34,9 +36,12 @@ ConfMatTab::~ConfMatTab()
 }
 
 
-void ConfMatTab::init(int rowCount, int colCount, QWidget* parent)
+void ConfMatTab::init(int rowCount,
+                      int colCount,
+                      QWidget* parent)
 {
-    m_unsavedChanges = false;
+    m_unsavedChanges  = false;
+    m_currentFileName = "";
 
     m_tableView = new QTableView(this);
 
@@ -62,9 +67,13 @@ void ConfMatTab::init(int rowCount, int colCount, QWidget* parent)
             SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
             parent,
             SLOT(slot_selectionChanged(const QItemSelection &, const QItemSelection &)));
+    connect(this,
+            SIGNAL(signal_dataChanged(const QModelIndex &, const QModelIndex &)),
+            parent,
+            SLOT(slot_dataChanged(const QModelIndex &, const QModelIndex &)));
     connect(m_cmatModel,
             SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
-            parent,
+            this,
             SLOT(slot_dataChanged(const QModelIndex &, const QModelIndex &)));
 }
 
@@ -80,10 +89,12 @@ QString ConfMatTab::getCMatItem(int row, int col) const
     return m_cmatModel->getItem(row, col).toString();
 }
 
+
 ConfMat& ConfMatTab::getCMat() const
 {
     return m_cmatModel->getCMat();
 }
+
 
 void ConfMatTab::deleteCMatItem(int row, int col)
 {
@@ -107,12 +118,6 @@ void ConfMatTab::setCMatItem(int row, int col, QString itemValue)
         }
         m_cmatModel->setData(cmatIndex, cmatItem, Qt::EditRole);
     }
-}
-
-
-void ConfMatTab::save()
-{
-
 }
 
 
@@ -396,4 +401,75 @@ bool ConfMatTab::canExpand() const
 {
     return ( (this->getCmatRowCount() < MAX_CMAT_ROWS) &&
              (this->getCmatColCount() < MAX_CMAT_COLS) );
+}
+
+
+QString ConfMatTab::getCurrentFileName() const
+{
+    return m_currentFileName;
+}
+
+
+bool ConfMatTab::saveCMat(QString filename)
+{
+    QStringList lines = this->getCMat().toStringList();
+    QFile file(filename);
+    if (file.open(QIODevice::WriteOnly))
+    {
+        QTextStream stream(&file);
+        QStringList::iterator it;
+        for (it = lines.begin(); it != lines.end(); ++it)
+        {
+            stream << *it << endl;
+        }
+        file.close();
+        m_unsavedChanges  = false;
+        m_currentFileName = filename;
+        emit signal_dataChanged(QModelIndex(), QModelIndex());
+        return true; // saving succesful
+    }
+    return false; // saving failed
+}
+
+
+bool ConfMatTab::exportCMat(QString filename)
+{
+    TexCode texCode(this->getCMat());
+    QStringList lines = texCode.getDocument();
+    QFile file(filename);
+    if (file.open(QIODevice::WriteOnly))
+    {
+        QTextStream stream(&file);
+        QStringList::iterator it;
+        for (it = lines.begin(); it != lines.end(); ++it)
+        {
+            stream << *it << endl;
+        }
+        file.close();
+        qDebug() << "blubb";
+        return true; // exporting succesful
+    }
+    qDebug() << "bla";
+    return false; // exporting failed
+}
+
+
+bool ConfMatTab::loadCMat(QString filename)
+{
+    QFile file(filename);
+    if (file.open(QIODevice::ReadOnly))
+    {
+        file.close();
+        return true;
+    }
+    return false;
+}
+
+
+void ConfMatTab::slot_dataChanged(const QModelIndex& topLeft,
+                                  const QModelIndex& bottomRight)
+{
+    m_unsavedChanges = true;
+
+    emit signal_dataChanged(topLeft, bottomRight);
 }

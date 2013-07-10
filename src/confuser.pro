@@ -14,8 +14,8 @@ SOURCES += main.cpp\
     confmatmodel.cpp \
     confmatcmds.cpp \
     confmat.cpp \
-    latexcode.cpp \
-    texcodedialog.cpp
+    texcodedialog.cpp \
+    texcode.cpp
 
 HEADERS  += mainwindow.h \
             confmattab.h \
@@ -24,8 +24,8 @@ HEADERS  += mainwindow.h \
     confmatmodel.h \
     confmatcmds.h \
     confmat.h \
-    latexcode.h \
-    texcodedialog.h
+    texcodedialog.h \
+    texcode.h
 
 FORMS    += mainwindow.ui \
     preferencesdialog.ui \

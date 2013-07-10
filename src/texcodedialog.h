@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-class LatexCode;
+class TexCode;
 
 namespace Ui {
 class TexCodeDialog;
@@ -14,7 +14,7 @@ class TexCodeDialog : public QDialog
     Q_OBJECT
     
 public:
-    explicit TexCodeDialog(LatexCode& texCode,
+    explicit TexCodeDialog(TexCode &texCode,
                            QWidget* parent = 0);
     ~TexCodeDialog();
     
@@ -24,7 +24,8 @@ private slots:
 private:
     Ui::TexCodeDialog* ui;
 
-    void loadCode(LatexCode& texCode);
+    void loadTable(TexCode& texCode);
+    void loadPreamble(TexCode& texCode);
 };
 
 #endif // TEXCODEDIALOG_H

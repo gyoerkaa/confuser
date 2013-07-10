@@ -36,7 +36,9 @@ class ConfMatTab : public QWidget
 
 public:
     explicit ConfMatTab(QWidget* parent = 0);
-    explicit ConfMatTab(int rowCount, int colCount, QWidget* parent = 0);
+    explicit ConfMatTab(int rowCount,
+                        int colCount,
+                        QWidget* parent = 0);
     ~ConfMatTab();
 
     QModelIndexList getSelectedIndices() const;
@@ -45,7 +47,6 @@ public:
 
     void deleteCMatItem(int row, int col);
     void setCMatItem(int row, int col, QString itemValue);
-    void save();
     bool canSave() const;
 
     void cutCMatItems();
@@ -72,6 +73,13 @@ public:
     bool canShrink() const;
     bool canExpand() const;
 
+    QString getCurrentFileName() const;
+    bool saveCMat(QString filename = "");
+    bool exportCMat(QString filename = "");
+    bool loadCMat(QString filename = "");
+
+signals:
+    void signal_dataChanged(const QModelIndex &, const QModelIndex &);
 
 private:
     //! @brief Widget used to display the tab/matrix
@@ -82,11 +90,16 @@ private:
     //! @brief Wether the matrix contains unsaved changes
     bool m_unsavedChanges;
 
+    QString m_currentFileName;
+
     //! @brief Layout for this page of the tab widget
     QVBoxLayout* m_layout;
 
     void init(int rowCount, int colCount, QWidget* parent = 0);
 
+private slots:
+    void slot_dataChanged(const QModelIndex& topLeft,
+                          const QModelIndex& bottomRight);
 };
 
 #endif // CONFMATTAB_H

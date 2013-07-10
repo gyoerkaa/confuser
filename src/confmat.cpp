@@ -57,9 +57,21 @@ bool ConfMat::setItem(int row, int col, QVariant value)
 }
 
 
-QList<QList<QVariant> > ConfMat::getList() const
+QStringList ConfMat::toStringList() const
 {
-    return m_cmat;
+    QStringList lineList;
+
+    for (int row=0; row < m_rowCount; ++row)
+    {
+        QString line;
+        for (int col=0; col < m_colCount-1; ++col)
+        {
+            line.append(m_cmat[row][col].toString() + ", ");
+        }
+        line.append(m_cmat[row][m_colCount-1].toString());
+        lineList.append(line);
+    }
+    return lineList;
 }
 
 

@@ -1,15 +1,16 @@
 #include "texcodedialog.h"
 #include "ui_texcodedialog.h"
 
-#include "latexcode.h"
+#include "texcode.h"
 
-TexCodeDialog::TexCodeDialog(LatexCode& texCode,
+TexCodeDialog::TexCodeDialog(TexCode& texCode,
                              QWidget* parent) :
     QDialog(parent),
     ui(new Ui::TexCodeDialog)
 {
     ui->setupUi(this);
-    this->loadCode(texCode);
+    this->loadPreamble(texCode);
+    this->loadTable(texCode);
 }
 
 
@@ -25,14 +26,31 @@ void TexCodeDialog::on_buttonExit_clicked()
 }
 
 
-void TexCodeDialog::loadCode(LatexCode& texCode)
+void TexCodeDialog::loadTable(TexCode& texCode)
 {
-    QTextDocument *document = ui->textEditTexCode->document();
+    QTextDocument *document = ui->textEditTable->document();
     QTextCursor cursor(document);
+    cursor.select(QTextCursor::Document);
 
-    cursor.select (QTextCursor::Document);
-    for (int i = 0; i < texCode.getMatLineCount(); ++i)
+    QStringList table = texCode.getTable();
+    QStringList::iterator it;
+    for (it = table.begin(); it != table.end(); ++it)
     {
-        cursor.insertText(texCode.getMatLine(i));
+        cursor.insertText(*it + "\n");
+    }
+}
+
+
+void TexCodeDialog::loadPreamble(TexCode& texCode)
+{
+    QTextDocument *document = ui->textEditPreamble->document();
+    QTextCursor cursor(document);
+    cursor.select(QTextCursor::Document);
+
+    QStringList preamble = texCode.getPreamble();
+    QStringList::iterator it;
+    for (it = preamble.begin(); it != preamble.end(); ++it)
+    {
+        cursor.insertText(*it + "\n");
     }
 }

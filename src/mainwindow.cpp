@@ -2,11 +2,12 @@
 #include "ui_mainwindow.h"
 #include "preferencesdialog.h"
 #include "texcodedialog.h"
-#include "latexcode.h"
+#include "texcode.h"
 #include "confmattab.h"
 #include "mainsettings.h"
 
 #include <QFileDialog>
+#include <QFileInfo>
 #include <QMessageBox>
 #include <QDebug>
 
@@ -20,6 +21,8 @@ MainWindow::MainWindow(QWidget* parent) :
     m_mainSettings = new MainSettings;
 
     this->addConfMatTab();
+
+
 }
 
 
@@ -48,11 +51,11 @@ void MainWindow::removeConfMatTab(ConfMatTab* confMatTab)
 
 ConfMatTab* MainWindow::addConfMatTab(int rowCount, int colCount, QString matName)
 {
-    ConfMatTab* newCMat = new ConfMatTab(rowCount, colCount, this);
-    newCMat->setAccessibleName(matName);
-
-    ui->cmatTabWidget->addTab(newCMat, matName);
-    return newCMat;
+    ConfMatTab* newCMatTab = new ConfMatTab(rowCount, colCount, this);
+    newCMatTab->setAccessibleName(matName);
+    newCMatTab->setObjectName(matName);
+    ui->cmatTabWidget->addTab(newCMatTab, matName);
+    return newCMatTab;
 }
 
 
@@ -82,14 +85,21 @@ bool MainWindow::unsavedChangesDialog(ConfMatTab* confMatTab)
 {
     QMessageBox msgBox;
     msgBox.setWindowTitle("Save");
-    msgBox.setIcon (QMessageBox::Question);
+    msgBox.setIcon(QMessageBox::Question);
     msgBox.setText(confMatTab->accessibleName()+" has been modified");
     msgBox.setInformativeText("Do you want to save your changes ?");
     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
     msgBox.setDefaultButton(QMessageBox::Yes);
-    int ret = msgBox.exec();
-    return true;
-    return ret;
+
+    switch(msgBox.exec())
+    {
+        case QMessageBox::No:     return true;
+        case QMessageBox::Cancel: return false;
+        case QMessageBox::Yes: this->on_actionSave_triggered(); return true;
+
+    }
+
+    return false;
 }
 
 
@@ -97,7 +107,7 @@ bool MainWindow::confirmToClose(ConfMatTab* confMatTab)
 {
     if (confMatTab->canSave())
     {
-        this->unsavedChangesDialog(confMatTab);
+        return this->unsavedChangesDialog(confMatTab);
     }
     return true;
 }
@@ -118,11 +128,9 @@ bool MainWindow::confirmToClose()
 void MainWindow::refreshButtonStates(ConfMatTab* confMatTab)
 {
     if (confMatTab == 0)
-        return;
-    qDebug() << "MainWindow::refreshButtonStates";
-    qDebug() << "... canUndo: " << confMatTab->canUndo();
-    qDebug() << "... canRedo: " << confMatTab->canRedo();
+        return;  
     ui->actionSave->setEnabled(confMatTab->canSave());
+    ui->actionSaveAs->setEnabled(confMatTab->canSave());
     ui->actionCut->setEnabled(confMatTab->canCopy());
     ui->actionCopy->setEnabled(confMatTab->canCopy());
     ui->actionPaste->setEnabled(confMatTab->canPaste());
@@ -155,9 +163,71 @@ void MainWindow::on_actionOpenFile_triggered()
 }
 
 
-void MainWindow::on_actionSave_triggered()
+bool MainWindow::saveConfMat(ConfMatTab *confMatTab, QString filepath)
 {
+    QString filep = filepath;
+    if (filep == "")
+    {
+        filep = QFileDialog::getSaveFileName(
+            this,
+            tr("Save Confusion matrix"),
+            "/",
+            tr("Comma-separated values (*.csv);; Text file (*.txt)"));
+    }
+    if (filep != "")
+    {
+        QFileInfo fileInfo(filep);
+        confMatTab->setAccessibleName(fileInfo.completeBaseName());
+        confMatTab->setObjectName(fileInfo.completeBaseName());
+        return confMatTab->saveCMat(filep);
+    }
+    return false;
+}
 
+
+bool MainWindow::exportConfMat(ConfMatTab *confMatTab, QString filepath)
+{
+    QString filep = filepath;
+    if (filep == "")
+    {
+        QString filep = QFileDialog::getSaveFileName(
+                    this,
+                    tr("Export Confusion Matrix"),
+                    "/",
+                    tr("LaTeX file (*.tex)"));
+    }
+    if (filep != "")
+    {
+        return confMatTab->exportCMat(filep);
+    }
+    return false;
+}
+
+
+void MainWindow::on_actionSave_triggered()
+{    
+    QString filename = this->getActiveConfMatTab()->getCurrentFileName();
+    this->saveConfMat(this->getActiveConfMatTab(), filename);
+}
+
+
+void MainWindow::on_actionSaveAs_triggered()
+{
+    this->saveConfMat(this->getActiveConfMatTab(), "");
+}
+
+
+void MainWindow::on_actionCmatExport_triggered()
+{
+    QString filepath = QFileDialog::getSaveFileName(
+                this,
+                tr("Save File"),
+                "/",
+                tr("LaTeX file (*.tex)"));
+    if (filepath != "")
+    {
+        this->exportConfMat(this->getActiveConfMatTab(), filepath);
+    }
 }
 
 
@@ -181,20 +251,6 @@ void MainWindow::on_actionCmatCloseAll_triggered()
         {
             this->removeConfMatTab(activeCmat);
         }
-    }
-}
-
-
-void MainWindow::on_actionCmatExport_triggered()
-{
-    QString filename = QFileDialog::getSaveFileName(
-                this,
-                tr("Save File"),
-                "/",
-                tr("LaTeX file (*.tex);; Text file (*.txt)"));
-    if (filename != "")
-    {
-        //
     }
 }
 
@@ -325,7 +381,6 @@ void MainWindow::slot_selectionChanged(const QItemSelection &selected,
 {
     Q_UNUSED(selected);
     Q_UNUSED(deselected);
-    qDebug() << "MainWindow::slot_selectionChanged";
     this->refreshButtonStates(this->getActiveConfMatTab());
 }
 
@@ -335,7 +390,6 @@ void MainWindow::slot_dataChanged(const QModelIndex& topLeft,
 {
     Q_UNUSED(topLeft);
     Q_UNUSED(bottomRight);
-    qDebug() << "MainWindow::slot_dataChanged";
     this->refreshButtonStates(this->getActiveConfMatTab());
 }
 
@@ -348,9 +402,10 @@ void MainWindow::on_actionEditPreferences_triggered()
     prefDialog.exec();
 }
 
+
 void MainWindow::on_actionViewLatexCode_triggered()
 {
-    LatexCode texCode(this->getActiveConfMatTab()->getCMat());
+    TexCode texCode(this->getActiveConfMatTab()->getCMat());
     TexCodeDialog codeDialog(texCode);
 
     codeDialog.setModal(true);

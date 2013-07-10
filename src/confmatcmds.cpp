@@ -50,7 +50,6 @@ SetItemCommand::SetItemCommand(ConfMatModel& confMatModel,
 
 void SetItemCommand::undo()
 {    
-    qDebug() << "SetItemCommand::undo";
     QModelIndexList::const_iterator idx_it = m_indices.begin();
     QList<QVariant>::const_iterator val_it = m_oldValues.begin();
     while (idx_it != m_indices.end())
@@ -58,13 +57,11 @@ void SetItemCommand::undo()
         if (val_it != m_oldValues.end())
         {
             m_confMatModel.setItem(*idx_it, *val_it);
-            qDebug() << "... oldValue: " << m_confMatModel.getItem(*idx_it).toString();
             ++val_it;
         }
         else
         {
             m_confMatModel.setItem(*idx_it, QVariant(""));
-            qDebug() << "... oldValue: " << "";
         }
         ++idx_it;
     }
@@ -73,7 +70,6 @@ void SetItemCommand::undo()
 
 void SetItemCommand::redo()
 {
-    qDebug() << "SetItemCommand::redo";
     QModelIndexList::const_iterator idx_it = m_indices.begin();
     QList<QVariant>::const_iterator val_it = m_newValues.begin();
     while (idx_it != m_indices.end())
@@ -81,13 +77,11 @@ void SetItemCommand::redo()
         if (val_it != m_newValues.end())
         {
             m_confMatModel.setItem(*idx_it, *val_it);
-            qDebug() << "... newValue: " << m_confMatModel.getItem(*idx_it).toString();
             ++val_it;
         }
         else
         {
             m_confMatModel.setItem(*idx_it, QVariant(""));
-            qDebug() << "... newValue: " << "";
         }
         ++idx_it;
     }
@@ -104,17 +98,14 @@ SetSizeCommand::SetSizeCommand(ConfMatModel& confMatModel,
     m_oldRowCount(confMatModel.rowCount(QModelIndex())),
     m_oldColCount(confMatModel.columnCount(QModelIndex()))
 {
+    Q_UNUSED(parent);
+
     QList<QVariant> m_deletedValues;
-    qDebug() << "SetSizeCommand::SetSizeCommand";
-    qDebug() << "... new: (" << m_newRowCount << ", " << m_newColCount << ")";
-    qDebug() << "... old: (" << m_oldRowCount << ", " << m_oldColCount << ")";
 }
 
 
 void SetSizeCommand::undo()
 {
-    qDebug() << "SetSizeCommand::undo";
-
     m_confMatModel.setSize(m_oldRowCount, m_oldColCount);
     // If the matrix has been shrunk, we need to restore the deleted items
     // We assume newCount < oldCount for this purpose (nothing to do otherwise)
@@ -141,8 +132,6 @@ void SetSizeCommand::undo()
 
 void SetSizeCommand::redo()
 {
-    qDebug() << "SetSizeCommand::redo";
-
     // If the matrix has been shrunk, we need to save the deleted items
     // We assume newCount < oldCount for this purpose (nothing to do otherwise)
     for (int r=0; r < m_newRowCount; ++r)

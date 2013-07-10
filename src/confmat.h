@@ -4,8 +4,7 @@
 #include <QList>
 #include <QVariant>
 #include <QModelIndex>
-
-class QVariant;
+#include <QStringList>
 
 class ConfMat
 {
@@ -15,7 +14,7 @@ public:
 
     QVariant getItem(int row, int col) const;
     bool setItem(int row, int col, QVariant value);
-    QList<QList<QVariant> > getList() const;
+    QStringList toStringList() const;
 
     int  getColCount() const;
     bool insertCols(int col, int count);

@@ -102,6 +102,24 @@ private:
     //! @param *confMatTab Pointer to the tab/matrix to get the state from.
     void refreshButtonStates(ConfMatTab *confMatTab);
 
+    //! @brief Saves the tab/matrix
+    //!
+    //! @return true, if saving was succesful. false, if the user
+    //!         chooses to close the file dialog before saving.
+    //! @param *confMatTab Pointer to the tab/matrix to save.
+    //! @param filename filename to save as. If empty a file save dialog will
+    //!                 appear and let user choose one.
+    bool saveConfMat(ConfMatTab *confMatTab, QString filepath = "");
+
+    //! @brief Exports the tab/matrix to a latey file
+    //!
+    //! @return true, if exporting was succesful. false, if the user
+    //!         chooses to close the file dialog before exporting.
+    //! @param *confMatTab Pointer to the tab/matrix to save.
+    //! @param filename filename to save as. If empty a file save dialog will
+    //!                 appear and let user choose one.
+    bool exportConfMat(ConfMatTab *confMatTab, QString filepath = "");
+
 private slots:
     void on_actionCmatNew_triggered();
     void on_actionOpenFile_triggered();
@@ -128,6 +146,7 @@ private slots:
     void on_actionEditPreferences_triggered();
 
     void on_actionViewLatexCode_triggered();
+    void on_actionSaveAs_triggered();
 };
 
 #endif // MAINWINDOW_H
